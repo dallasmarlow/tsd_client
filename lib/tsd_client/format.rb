@@ -6,6 +6,8 @@ module TSD
       case input.class.name
       when 'Time'
         input.strftime '%Y/%m/%d-%H:%M:%S'
+      when 'Date'
+        time input.to_time
       when 'Fixnum'
         time Time.at input
       else
