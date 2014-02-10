@@ -18,20 +18,18 @@ module TSD
     end
 
     def query options
-      response = nil
-
-      Timeout::timeout @options[:timeout] do
-        response = Net::HTTP.start @options[:host], @options[:port] do |http|
+      response = Timeout::timeout @options[:timeout] do
+        Net::HTTP.start @options[:host], @options[:port] do |http|
           http.request Net::HTTP::Get.new Format.query options
         end
       end
 
       if response.kind_of? Net::HTTPSuccess
-        response.body.split("\n").collect do |record|
+        response.body.split("\n").map do |record|
           metric, timestamp, value, *tags = record.split "\s"
 
           Hash[[:metric, :time, :value, :tags].zip([
-            metric, Time.at(timestamp.to_i), value.to_f, Hash[tags.collect {|tag| tag.split('=')}]])]
+            metric, Time.at(timestamp.to_i), value.to_f, Hash[tags.map {|tag| tag.split('=')}]])]
         end
       else
         raise 'query failed: ' + response.code
