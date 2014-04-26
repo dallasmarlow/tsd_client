@@ -1,3 +1,4 @@
+require 'socket'
 require 'uri'
 
 module TSD
@@ -62,7 +63,9 @@ module TSD
 
     def self.put options
       [:metric, :value].any? {|key| raise "missing key: #{key}" unless options.has_key? key}
-      options  = {time: Time.now, tags: {}}.merge options
+
+      options[:time] ||= Time.now
+      options[:tags] ||= {host: Socket.gethostname}
 
       ['put', options[:metric], options[:time].to_i, options[:value], tags(options[:tags])].flatten.join("\s")
     end
