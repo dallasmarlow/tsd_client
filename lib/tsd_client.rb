@@ -38,6 +38,9 @@ module TSD
       Timeout::timeout @options[:timeout] do
         TCPSocket.open @options[:host], @options[:port] do |socket|
           socket.puts Format.put options
+
+          response, _, _ = socket.recvmsg_nonblock rescue nil
+          response.chomp if response
         end
       end
     end
