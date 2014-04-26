@@ -7,8 +7,6 @@ require 'tsd_client/format'
 
 module TSD
   class Client
-    attr_reader :options
-
     def initialize options = {}
       @options = {
         host:    '0.0.0.0',
