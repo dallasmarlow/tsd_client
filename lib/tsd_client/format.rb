@@ -39,7 +39,7 @@ module TSD
       metric_query.join ':'
     end
 
-    def self.query options
+    def self.query options, format = 'ascii'
       raise 'must provide key: :start' unless options[:start]
       options_filter = [:metric, :aggregator, :rate, :downsample, :tags]
 
@@ -58,7 +58,7 @@ module TSD
       end
 
       # assemble query
-      URI.escape '/q?' + params.map {|option, value| [option, value].join('=')}.unshift('ascii').join('&')      
+      URI.escape '/q?' + params.map {|option, value| [option, value].join('=')}.unshift(format).join('&')      
     end
 
     def self.put options
