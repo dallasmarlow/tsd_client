@@ -9,7 +9,7 @@ module TSD
   class Client
     attr_reader :options
 
-    def initialize options
+    def initialize options = {}
       @options = {
         host:    '0.0.0.0',
         port:    4242,
